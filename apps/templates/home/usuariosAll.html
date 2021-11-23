@@ -1,0 +1,196 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Lista de Usuarios {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<script>
+
+    function ElimRegistro(clicked_id)
+    {
+        var id = String(clicked_id);
+        var nombre_view = document.getElementById('Contenedor_idd').innerHTML =  '<div class="modal-header">'
+        +            '<p class="modal-title" id="modalTitleNotify">Mensje de Alerta!.</p>'
+        +            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
+        +       ' </div>'
+        +        '<div class="modal-body">'
+        +            '<div class="py-3 text-center">'
+        +                '<svg class="icon icon-xl text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>'
+        +                '<h2 class="h4 modal-title my-3">¿Esta Seguro que quiere ELIMINAR el USUARIO con id ='+ ' "'+id+'" ?' + ' </h2>'
+        +            '</div>'
+        +        '</div>'
+        +        '<div class="modal-footer">'
+        +            '<a class="btn btn-gray-800" id="selector_elim"  href="#" >Eliminar</a>'
+        +        '</div>'
+
+        ruta =  '/usuarios_elim/'+id +'/';
+        document.getElementById('selector_elim').href = ruta;
+    }
+
+
+    function EditRegistro(clicked_id)
+        {
+            var id = String(clicked_id);
+            // var nombre_view = document.getElementById('Contenedor_idd').innerHTML = "¿Estas Seguro de Eliminar el Registro " + '"' +'" '+ "Identificado con ID "+'"'+ id +'"' + " ?";
+            var nombre_view = document.getElementById('Contenedor_idd').innerHTML = ''
+
+            ruta = '/Cargo_elim/'+id +'/';
+            document.getElementById('selector_elim').href = ruta;
+        }
+
+</script>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="py-4">
+
+    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+        <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+            <li class="breadcrumb-item">
+                <a href="#">
+                    <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                        </path>
+                    </svg>
+                </a>
+            </li>
+            <li class="breadcrumb-item"><a href="#">Usuarios</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Lista de Usuarios</li>
+        </ol>
+    </nav>
+    {% if current_user.role == 'Admin' %}
+    <div class="content-fluid mt-2">
+        <a class="btn btn-gray-800" href="{{ url_for('home_blueprint.empleado') }} "><span class="fas fa-edit me-2"></span>Crear Usuario</a>
+    </div>
+    {% endif %}
+    
+
+    <div class="card card-body border-0 shadow table-wrapper table-responsive mt-4">
+        <h3>listado de Usuarios</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="border-gray-200">id</th>
+                    <th class="border-gray-200">Rol</th>
+                    <th class="border-gray-200">Usuario</th>
+                    <th class="border-gray-200">Nombre Completo</th>		
+                    <!-- <th class="border-gray-200">Rh+</th> -->
+                    <th class="border-gray-200">Cédula</th>	
+                    <th class="border-gray-200">Celular</th>
+                    <th class="border-gray-200">Correo</th>					
+                    <th class="border-gray-200">Estado</th>
+                    <th class="border-gray-200">Cargo</th>	
+                    <th class="border-gray-200">Depedencia</th>
+                    <th class="border-gray-200">Salario</th>	
+                    <th class="border-gray-200">Fecha de Igreso</th>	
+                    <th class="border-gray-200">Fecha Finalizacion</th>	
+                    {% if current_user.role == 'Admin' or current_user.role == 'SuperAdmin' %}
+                        <th class="border-gray-200"></th>	
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+    
+                {% if usuarios %}
+                <!-- Item -->
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{usuario.id}}</td>
+                    <td>{{usuario.role}}</td>
+                    <td>{{usuario.username}}</td>
+                    <td>{{usuario.name}} {{usuario.apellido}}</td>
+                    <!-- <td>{{usuario.rh}}</td> -->
+                    <td>{{usuario.cedula}}</td>
+                    <td>{{usuario.celular}}</td>
+                    <td>{{usuario.email}}</td>
+                    <td>{{usuario.estado}}</td>
+                    <td>{{usuario.cargo}}</td>
+                    <td>{{usuario.dependencia}}</td>
+                    <td>{{usuario.salario}}</td>
+                    <td>{{usuario.fecha_inicio}}</td>
+                    <td>{{usuario.fecha_terminacion}}</td>
+
+                    <!-- https://www.it-swarm-es.com/es/python/como-usar-flask-jinja2-url-for-con-multiples-parametros/1044528806/ -->
+                    {% if current_user.role == 'Admin' or current_user.role == 'SuperAdmin' %}
+                        <td>
+                            <div class="btn-group me-2 mb-2">
+                                <button type="button" class="btn btn-sm btn-tertiary">Accion</button>
+                                <button type="button" class="btn btn-sm btn-tertiary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"  href="{{ url_for('home_blueprint.EditUser', id = usuario.id)}}" >Editar</a>
+                                    <a class="dropdown-item" id = {{usuario.id}} href="#" data-bs-toggle="modal" data-bs-target="#modalNotification" onclick="ElimRegistro(this.id)">Eliminar</a>
+                                </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+                {%endfor%}
+                <!-- Item -->
+                {% endif %}                     
+            </tbody>
+        </table>
+
+        <!-- Modal Content -->
+        <div class="modal fade" id="modalNotification" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+
+                <div class="modal-content" id="Contenedor_idd">
+
+                    
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Content -->
+
+
+        
+        <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination mb-0">
+                    <li class="page-item">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">4</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">5</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="fw-normal small mt-4 mt-lg-0">Showing <b>5</b> out of <b>25</b> entries</div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+{% endblock javascripts %}
